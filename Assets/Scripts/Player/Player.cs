@@ -4,27 +4,33 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] BulletPool bulletPool;
+    GameManager GM;
+
+    Vector2[][] bulletPoints = {
+    new Vector2[1]{ new Vector2(0, 0) },
+    new Vector2[2] {new Vector2(-0.1f, 0), new Vector2(0.1f, 0) },
+    new Vector2[3] { new Vector2(-0.2f, 0), new Vector2(0, 0), new Vector2(0.2f, 0) },
+    };
     void Start()
     {
-        
+        GM = GameManager.Instance;
+        StartCoroutine(FireBullet());
     }
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            InvokeRepeating("FireBullet", 0, 1); // Bullet 종류 별 클래스 만들어서 State 패턴으로 관리해도 될듯 그리고 FireSpeed 접근해서 쓰고
-        }
-
-        else if(Input.GetKeyUp(KeyCode.A))
-        {
-            CancelInvoke("FireBullet");
-        }
     }
 
-    void FireBullet()
+    IEnumerator FireBullet()
     {
-        Bullet bullet = bulletPool.GetBullet(Vector2.zero);
+        while (true)
+        {
+            Bullet bullet = GM.bulletPool.GetBullet(transform.GetChild(0), (Vector2)transform.position);
+            // bullet.Init();
+            bullet.bulletInfo.MoveSpeed = 3;
+            bullet.transform.localScale = new Vector2(0.3f, 0.3f);
+            bullet.bulletInfo.FireDir = Vector2.up;
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 }

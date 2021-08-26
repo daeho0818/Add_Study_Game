@@ -13,31 +13,25 @@ public class BulletPool : MonoBehaviour
         bulletParent = GameManager.Instance.player.transform.GetChild(0);
     }
 
-    void Update()
-    {
-
-    }
-    Bullet BulletSetting(Bullet bullet, Vector2 position)
+    Bullet BulletSetting(Bullet bullet, Transform parent, Vector2 position)
     {
         bullet.gameObject.SetActive(true);
-        bullet.transform.localPosition = position;
-        bullet.transform.SetParent(bulletParent);
+        bullet.transform.SetParent(parent);
+        bullet.transform.position = position;
         return bullet;
     }
 
-    public Bullet GetBullet(Vector2 position = new Vector2())
+    public Bullet GetBullet(Transform parent, Vector2 position = new Vector2())
     {
         Bullet bullet;
-
-
         if (bulletPool.Count > 0)
         {
             bullet = bulletPool.Dequeue();
-            return BulletSetting(bullet, position);
+            return BulletSetting(bullet, parent, position);
         }
 
         bullet = Instantiate(BulletPrefab, bulletParent);
-        return BulletSetting(bullet, position);
+        return BulletSetting(bullet, parent, position);
     }
 
     public void ReleaseBullet(Bullet bullet)

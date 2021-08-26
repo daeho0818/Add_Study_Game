@@ -1,37 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Bullet : MonoBehaviour
+public class BulletInfo
 {
-    public enum BulletType
+    public int BulletCount { get; set; }
+    public float BulletPower { get; set; }
+    public float FireSpeed { get; set; }
+    public float MoveSpeed { get; set; }
+
+    Vector2 fireDir;
+    public Vector2 FireDir
+    {
+        get =>
+            fireDir.normalized;
+        set =>
+            fireDir = value.normalized;
+    }
+    public enum Type
     {
         Player,
         Enemy
     }
-    [SerializeField] BulletType bulletType;
+    public Type BulletType { get; set; }
+}
 
-    Vector2 FireDir
+public class Bullet : MonoBehaviour
+{
+    public BulletInfo bulletInfo;
+
+    private void OnEnable()
     {
-        get
-        {
-            if (FireDir != FireDir.normalized)
-                FireDir = FireDir.normalized;
-            return FireDir;
-        }
-        set
-        {
-            Vector2 dir = value;
-            FireDir = dir;
-            if (dir != dir.normalized)
-                FireDir = dir.normalized;
-        }
+        bulletInfo = new BulletInfo();
     }
-
-    public float fireSpeed;
-
     void Update()
     {
-        transform.Translate(FireDir * fireSpeed * Time.deltaTime);
+        transform.Translate(bulletInfo.FireDir * bulletInfo.MoveSpeed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("OutCollider"))
+        {
+            GameManager.Instance.bulletPool.ReleaseBullet(this);
+        }
     }
 }
