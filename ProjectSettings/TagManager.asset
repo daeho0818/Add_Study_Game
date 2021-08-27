@@ -5,12 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - OutCollider
-  - MainCharacter
+  - Character
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Character
   - Water
   - UI
   - 

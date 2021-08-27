@@ -10,28 +10,28 @@ public class BulletPool : MonoBehaviour
     Bullet BulletPrefab => Resources.Load<Bullet>("Bullet");
     void Start()
     {
-        bulletParent = GameManager.Instance.player.transform.GetChild(0);
+        bulletParent = GameManager.Instance.characters[0].transform.GetChild(0);
     }
 
-    Bullet BulletSetting(Bullet bullet, Transform parent, Vector2 position)
+    Bullet BulletSetting(Bullet bullet, BulletInfo bulletInfo, Vector2 position)
     {
         bullet.gameObject.SetActive(true);
-        bullet.transform.SetParent(parent);
         bullet.transform.position = position;
+        bullet.bulletInfo = bulletInfo;
         return bullet;
     }
 
-    public Bullet GetBullet(Transform parent, Vector2 position = new Vector2())
+    public Bullet GetBullet(BulletInfo bulletInfo, Vector2 position = new Vector2())
     {
         Bullet bullet;
         if (bulletPool.Count > 0)
         {
             bullet = bulletPool.Dequeue();
-            return BulletSetting(bullet, parent, position);
+            return BulletSetting(bullet, bulletInfo, position);
         }
 
         bullet = Instantiate(BulletPrefab, bulletParent);
-        return BulletSetting(bullet, parent, position);
+        return BulletSetting(bullet, bulletInfo, position);
     }
 
     public void ReleaseBullet(Bullet bullet)

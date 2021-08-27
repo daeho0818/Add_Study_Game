@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class BulletInfo
 {
+    public Character character;
     public int BulletCount { get; set; }
     public float BulletPower { get; set; }
     public float FireSpeed { get; set; }
     public float MoveSpeed { get; set; }
-
+    public Vector2 Size { get; set; }
     Vector2 fireDir;
     public Vector2 FireDir
     {
@@ -16,12 +17,17 @@ public class BulletInfo
         set =>
             fireDir = value.normalized;
     }
-    public enum Type
+
+    public void Init(Character character)
     {
-        Player,
-        Enemy
+        this.character = character;
+        BulletCount = 1;
+        BulletPower = 0.25f;
+        FireSpeed = 1;
+        MoveSpeed = 2;
+        Size = new Vector2(0.4f, 0.4f);
+        FireDir = new Vector2(0, 1);
     }
-    public Type BulletType { get; set; }
 }
 
 public class Bullet : MonoBehaviour
@@ -30,7 +36,6 @@ public class Bullet : MonoBehaviour
 
     private void OnEnable()
     {
-        bulletInfo = new BulletInfo();
     }
     void Update()
     {
@@ -41,7 +46,7 @@ public class Bullet : MonoBehaviour
     {
         if (collision.CompareTag("OutCollider"))
         {
-            GameManager.Instance.bulletPool.ReleaseBullet(this);
+            bulletInfo.character.bulletPool.ReleaseBullet(this);
         }
     }
 }
