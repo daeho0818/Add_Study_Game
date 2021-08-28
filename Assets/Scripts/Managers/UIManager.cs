@@ -29,4 +29,28 @@ public class UIManager : MonoBehaviour
         foreach (Button button in buttons)
             button.onClick.AddListener(() => { Funcs[buttons.IndexOf(button)](); });
     }
+
+    public void FadeImg(Image image, float alpha)
+    {
+        StartCoroutine(_FadeImg(image, alpha));
+    }
+
+    IEnumerator _FadeImg(Image image, float alpha)
+    {
+        Color color;
+
+        float operValue;
+        if (alpha >= image.color.a)
+            operValue = 0.01f;
+        else
+            operValue = -0.01f;
+        while(true)
+        {
+            color = image.color;
+            if (Mathf.Abs(color.a - alpha) <= 0.1f) yield break;
+            color.a += operValue;
+            yield return new WaitForSeconds(0.001f);
+            image.color = color;
+        }
+    }
 }

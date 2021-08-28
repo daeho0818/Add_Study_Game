@@ -10,11 +10,7 @@ public class Character : MonoBehaviour
     public BulletInfo bulletInfo { get; set; }
     public int charIndex;
 
-    Vector2[][] bulletPoints = {
-    new Vector2[1]{ new Vector2(0, 0) },
-    new Vector2[2] {new Vector2(-0.2f, 0), new Vector2(0.2f, 0) },
-    new Vector2[3] { new Vector2(-0.4f, 0), new Vector2(0, 0), new Vector2(0.4f, 0) },
-    };
+    Vector2[][] bulletPoints;
     void Start()
     {
         Init();
@@ -28,6 +24,12 @@ public class Character : MonoBehaviour
 
         bulletInfo = new BulletInfo();
         bulletInfo.Init(this);
+
+        bulletPoints = new Vector2[][]{
+            new Vector2[1] { new Vector2(0, 0) },
+            new Vector2[2] { new Vector2(-transform.localScale.x / 2.5f, 0), new Vector2(transform.localScale.x / 2.5f, 0) },
+            new Vector2[3] { new Vector2(-transform.localScale.x / 1.5f, 0), new Vector2(0, 0), new Vector2(transform.localScale.x / 1.5f, 0) },
+        };
 
         StartCoroutine(FireBullet());
     }

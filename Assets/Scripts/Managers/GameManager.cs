@@ -9,11 +9,12 @@ public class GameManager : MonoBehaviour
 
     public Character[] characters;
 
+    [SerializeField] UnityEngine.UI.Image fadeImg;
     public int CharCount { get; set; } = 1;
     public int CharIndex { get; set; } = 0;
     public int Money { get; set; }
 
-    RaycastHit2D hit;
+    RaycastHit2D[] hit = new RaycastHit2D[2];
     private void Awake()
     {
         Instance = this;
@@ -27,29 +28,47 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.forward, 3, LayerMask.GetMask("Character"));
+            hit[0] = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.forward, 3, LayerMask.GetMask("Character"));
 
-            if (hit.transform != null)
+            if (hit[0].transform != null)
             {
                 charClick[0] = true;
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.forward, 3, LayerMask.GetMask("Character"));
+            hit[0] = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.forward, 3, LayerMask.GetMask("Character"));
+            hit[1] = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.forward, 3, LayerMask.GetMask("UI"));
 
-            if (hit.transform != null)
+            if (hit[0].transform != null)
                 charClick[1] = true;
-            else
-                charClick[0] = charClick[1] = false;
 
-            if(charClick[0] && charClick[1])
+            else if (hit[0].transform == null && hit[1].transform == null)
             {
-                Character character = hit.transform.GetComponent<Character>();
+                Time.timeScale = 1;
+                CameraManager.Instance.AddCameraMove(Vector2.zero, 100);
+                CameraManager.Instance.AddCameraZoom(5, 100, 0);
+                CameraManager.Instance.PlayAll();
+
+                UIManager.Instance.FadeImg(fadeImg, 0);
+            }
+
+            if (charClick[0] && charClick[1])
+            {
+                Time.timeScale = 0.2f;
+
+                CameraManager.Instance.AddCameraMove(hit[0].transform.position + Vector3.up, 100);
+                CameraManager.Instance.AddCameraZoom(3, 100, 9999);
+                CameraManager.Instance.PlayAll();
+
+                UIManager.Instance.FadeImg(fadeImg, 0.75f);
+
+                Character character = hit[0].transform.GetComponent<Character>();
                 CharIndex = character.charIndex;
 
                 UIManager.Instance.SetButtonFuncs(GetUpgrades(CharIndex));
             }
+            charClick[0] = charClick[1] = false;
         }
     }
 
