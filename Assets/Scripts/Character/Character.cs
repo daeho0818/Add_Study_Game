@@ -49,3 +49,17 @@ public class Character : MonoBehaviour
         }
     }
 }
+
+/*
+    사용한 디자인패턴
+    - Singleton
+    - Object Pool
+    - Command
+    - Bridge
+    - Component
+    - State
+
+    사용한 자료구조
+    - Queue
+    - List
+*/
