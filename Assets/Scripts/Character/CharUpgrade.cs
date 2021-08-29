@@ -16,7 +16,7 @@ public class CharUpgrade : MonoBehaviour
     }
     public void BulletCountUp()
     {
-        if (character.bulletInfo.BulletCount >= 5) return;
+        if (character.bulletInfo.BulletCount >= 3) return;
         Debug.Log("Bullet Count UPgrade");
         character.bulletInfo.BulletCount++;
     }
